@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GhostControl : MonoBehaviour
-{
+public class GhostControl : MonoBehaviour {
     public bool enableEditorDebug;
-
-    [Header("Input Settings")]
-    public KeyCode leftKey = KeyCode.A;
-    public KeyCode rightKey = KeyCode.D;
-    public KeyCode upKey = KeyCode.W;
-    public KeyCode downKey = KeyCode.S;
-    public KeyCode toggleKey = KeyCode.E;
+    public GameObject player;
 
     [Header("Movement Settings")]
     [Range(0f, 20f)]
@@ -19,15 +12,17 @@ public class GhostControl : MonoBehaviour
     [Range(0f, 20f)]
     public float acceleration = 2;
     [Range(0f, 40f)]
-    public float stopPower = 30;
+    public float stopPower = 10;
+
+    [Header("Game Settings")]
+    [Range(1f, 100f)]
+    public float timeLimit = 20;
 
     [Header("Graphics Settings")]
     public SpriteRenderer renderer;
 
     [Header("Physics Settings")]
     public Rigidbody2D rigidbody;
-    [Range(0f, 5f)]
-    public float bottomOffset = 0.5f;
 
     [Header("Player Conditions (Do not modify these fields through Editor)")]
     public float currentSpeedX;
@@ -38,32 +33,43 @@ public class GhostControl : MonoBehaviour
     public bool blockedY;
     public bool hasCheckedCollision;
 
+    // Reference to the player.
+    public PlayerControl playerScript;
+    // Receives the key inputs from the player at Start().
+    private KeyCode leftKey;
+    private KeyCode rightKey;
+    private KeyCode upKey;
+    private KeyCode downKey;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        timeLeft = 20f;
+    void Start() {
+        player = GameObject.Find("Player");
+        playerScript = player.GetComponent<PlayerControl>();
+        leftKey = playerScript.leftKey;
+        rightKey = playerScript.rightKey;
+        upKey = playerScript.upKey;
+        downKey = playerScript.downKey;
         if (enableEditorDebug) Debug.Log("PlayerController.Start() is called.");
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (enableEditorDebug) Debug.Log("PlayerController.Update() is called.");
 
         // Get the time elapsed since last frame and decrease countdown accordingly.
         float timeElapsed = Time.deltaTime;
         timeLeft -= timeElapsed;
         // Remove ghost from scene if there is no time left in countdown
-        if (timeLeft <= 0) { ToggleOff(); }
+        if (timeLeft <= 0) {
+            toggleOff(false); 
+        }
 
         // Get the current postion of player-controlled ghost.
         Vector2 currentPosition = transform.position;
 
-        if (blockedX)
-        {
+        if (blockedX) {
             currentSpeedX = 0;
-        } else if (blockedY)
-        {
+        } else if (blockedY) {
             currentSpeedY = 0;
         }
 
@@ -72,45 +78,28 @@ public class GhostControl : MonoBehaviour
         bool rightPressed = Input.GetKey(rightKey);
         bool upPressed = Input.GetKey(upKey);
         bool downPressed = Input.GetKey(downKey);
-        bool togglePressed = Input.GetKey(toggleKey);
 
         float prevAccel = acceleration;
         // Change acceleration when moving diagonally.
-        if ((upPressed || downPressed) && (leftPressed || rightPressed))
-        {
+        if ((upPressed || downPressed) && (leftPressed || rightPressed)) {
             acceleration = acceleration * Mathf.Pow(2, 0.5f);
         }
 
-        if (togglePressed)
-        {
-            ToggleOff();
-        }
-
         // Process horizontal speed.
-        if (leftPressed && !rightPressed && currentSpeedX <= 0)
-        {
+        if (leftPressed && !rightPressed && currentSpeedX <= 0) {
             currentSpeedX = Mathf.MoveTowards(currentSpeedX, -speed, acceleration * timeElapsed);
-        }
-        else if (!leftPressed && rightPressed && currentSpeedX >= 0)
-        {
+        } else if (!leftPressed && rightPressed && currentSpeedX >= 0) {
             currentSpeedX = Mathf.MoveTowards(currentSpeedX, speed, acceleration * timeElapsed);
-        }
-        else
-        {
+        } else {
             currentSpeedX = Mathf.MoveTowards(currentSpeedX, 0, stopPower * timeElapsed);
         }
 
         // Process vertical speed.
-        if (upPressed && !downPressed && currentSpeedY >= 0)
-        {
+        if (upPressed && !downPressed && currentSpeedY >= 0) {
             currentSpeedY = Mathf.MoveTowards(currentSpeedY, speed, acceleration * timeElapsed);
-        }
-        else if (!upPressed && downPressed && currentSpeedY <= 0)
-        {
+        } else if (!upPressed && downPressed && currentSpeedY <= 0) {
             currentSpeedY = Mathf.MoveTowards(currentSpeedY, -speed, acceleration * timeElapsed);
-        }
-        else
-        {
+        } else {
             currentSpeedY = Mathf.MoveTowards(currentSpeedY, 0, stopPower * timeElapsed);
         }
 
@@ -123,13 +112,17 @@ public class GhostControl : MonoBehaviour
         hasCheckedCollision = true;
     }
 
-    void ToggleOn()
-    {
-        // To Do
+    public void toggleOn() {
+        // Set the ghost's position as the player's position
+        transform.position = player.transform.position;
+        timeLeft = timeLimit;
+        gameObject.SetActive(true);
     }
 
-    void ToggleOff()
-    {
-        // To Do
+    public void toggleOff(bool forced) {
+        if (!forced) {
+            playerScript.toggleOff();
+        }
+        gameObject.SetActive(false);
     }
 }

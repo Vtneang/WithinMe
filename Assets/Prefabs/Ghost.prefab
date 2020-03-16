@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 140908036892039341}
+  - component: {fileID: 5152078888749408240}
   - component: {fileID: 140908036892039340}
-  - component: {fileID: 140908036892039342}
   - component: {fileID: 140908036892039343}
   m_Layer: 0
   m_Name: Ghost
@@ -33,6 +33,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5152078888749408240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140908036892039339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8956a39c8cdc34aa0aff8b4633100609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableEditorDebug: 0
+  player: {fileID: 0}
+  speed: 5
+  acceleration: 2
+  stopPower: 10
+  timeLimit: 20
+  renderer: {fileID: 140908036892039340}
+  rigidbody: {fileID: 140908036892039343}
+  currentSpeedX: 0
+  currentSpeedY: 0
+  timeLeft: 0
+  toggled: 0
+  blockedX: 0
+  blockedY: 0
+  hasCheckedCollision: 0
+  playerScript: {fileID: 0}
 --- !u!212 &140908036892039340
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -47,7 +75,6 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -59,7 +86,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -83,37 +109,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &140908036892039342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140908036892039339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8956a39c8cdc34aa0aff8b4633100609, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableEditorDebug: 0
-  leftKey: 97
-  rightKey: 100
-  upKey: 119
-  downKey: 115
-  toggleKey: 101
-  speed: 5
-  acceleration: 4
-  stopPower: 30
-  renderer: {fileID: 0}
-  rigidbody: {fileID: 140908036892039343}
-  bottomOffset: 0.5
-  currentSpeedX: 0
-  currentSpeedY: 0
-  timeLeft: 0
-  toggled: 0
-  blockedX: 0
-  blockedY: 0
-  hasCheckedCollision: 0
 --- !u!50 &140908036892039343
 Rigidbody2D:
   serializedVersion: 4
