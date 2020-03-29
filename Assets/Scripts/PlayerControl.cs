@@ -31,6 +31,7 @@ public class PlayerControl : MonoBehaviour {
     public float maxFallSpeed = -100;
     [Range(0f, 5f)]
     public float bot = .5f;
+    public bool is_in_light;
 
     [Header("Graphics Settings")]
     public SpriteRenderer renderer;

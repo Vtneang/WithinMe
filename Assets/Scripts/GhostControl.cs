@@ -50,6 +50,7 @@ public class GhostControl : MonoBehaviour {
         upKey = playerScript.upKey;
         downKey = playerScript.downKey;
         if (enableEditorDebug) Debug.Log("PlayerController.Start() is called.");
+        
     }
 
     // Update is called once per frame
@@ -115,7 +116,15 @@ public class GhostControl : MonoBehaviour {
     public void toggleOn() {
         // Set the ghost's position as the player's position
         transform.position = player.transform.position;
-        timeLeft = timeLimit;
+        if (!playerScript.is_in_light)
+        {
+            timeLeft = timeLimit / 4;
+        }
+        else
+        {
+            timeLeft = timeLimit;
+        }
+        Debug.Log(timeLeft);
         gameObject.SetActive(true);
     }
 
