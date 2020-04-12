@@ -143,7 +143,7 @@ public class PlayerControl : MonoBehaviour {
         ghostScript.toggleOn();
     }
 
-    // Switch out of the ghost state
+    // Switch out of the ghost stategd
     public void toggleOff() {
         isInControl = true;
         // Un-freeze the player.
