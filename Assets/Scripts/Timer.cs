@@ -12,7 +12,13 @@ public class Timer : MonoBehaviour
     [SerializeField]
     [Tooltip("amount of time wanted for the timer")]
     private float end_time;
-    private bool all_active;
+    public bool all_active;
+    private Coroutine C;
+    public bool istimer = true;
+    public GameObject device;
+    [SerializeField]
+    [Tooltip("if true there is a time limit to how long it is open")]
+    private bool alltimed;
     #endregion
 
 
@@ -23,15 +29,19 @@ public class Timer : MonoBehaviour
         int count = 0;
         foreach(Button b in buttons)
         {
-            if (b.active)
+            if (b.activated)
             {
                 count += 1;
             }
         }
         if(count == buttons.Length)
         {
-            StopCoroutine(begin());
+            if (!alltimed)
+            {
+                StopCoroutine(C);
+            }
             all_active = true;
+            device.active = true;
         }
 
         
@@ -47,7 +57,7 @@ public class Timer : MonoBehaviour
         if (!started)
         {
             started = true;
-            StartCoroutine(begin());
+            C = StartCoroutine(begin());
         }
 
     }
@@ -64,6 +74,7 @@ public class Timer : MonoBehaviour
         {
             b.turn_off();
         }
+        all_active = false;
         started = false;
     }
     #endregion

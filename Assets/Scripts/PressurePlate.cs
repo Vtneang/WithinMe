@@ -6,8 +6,10 @@ public class PressurePlate : MonoBehaviour
 {
     #region plate_vars
     private List<GameObject> on_top;
-    private bool active;
+    private bool activated;
     private int amount;
+    [SerializeField]
+    private GameObject device;
     #endregion
 
     #region plate_vars
@@ -16,7 +18,8 @@ public class PressurePlate : MonoBehaviour
     {
         on_top.Add(collision.gameObject);
         amount += 1;
-        active = true;
+        activated = true;
+        device.active = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -25,7 +28,7 @@ public class PressurePlate : MonoBehaviour
         amount -= 1;
         if(amount == 0)
         {
-            active = false;
+            activated = false;
         }
     }
 
