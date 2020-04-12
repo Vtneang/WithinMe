@@ -125,6 +125,7 @@ public class GhostControl : MonoBehaviour {
             timeLeft = timeLimit;
         }
         Debug.Log(timeLeft);
+        if (Camera.main != null) Camera.main.GetComponent<CameraController>().player = transform;
         gameObject.SetActive(true);
     }
 
@@ -132,6 +133,7 @@ public class GhostControl : MonoBehaviour {
         if (!forced) {
             playerScript.toggleOff();
         }
+        if (Camera.main != null) Camera.main.GetComponent<CameraController>().player = player.transform;
         gameObject.SetActive(false);
     }
 }

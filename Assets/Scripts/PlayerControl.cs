@@ -25,6 +25,8 @@ public class PlayerControl : MonoBehaviour {
     public float speedY = 7;
     [Range(0f, 50f)]
     public float gravity = 7;
+    [Range(0f, 2f)]
+    public float bottomOffset = 0.5f;
     [Range(0f, 1f)]
     public float onAirAcceleration = 0.1f;
     [Range(0f, 200f)]
@@ -50,6 +52,7 @@ public class PlayerControl : MonoBehaviour {
     // Current speed in y-axis
     private float dy = 0;
     // True if player is at an on-ground state.
+    [SerializeField]
     private bool onGround;
     // True if the player character is being controlled.
     private bool isInControl = true;
@@ -57,6 +60,7 @@ public class PlayerControl : MonoBehaviour {
     public GhostControl ghostScript;
     // Memorize the velocity of the player when switching to the ghost state.
     private Vector2 memorizeVelocity;
+    private bool hasCheckedCollision;
 
     void Start() {
         ghost = GameObject.Find("Ghost");
@@ -98,7 +102,6 @@ public class PlayerControl : MonoBehaviour {
                 // Jump.
                 if (Input.GetKey(jumpKey)) {
                     dy = speedY;
-                    onGround = false;
                 }
             } else if (!onGround) {
                 // Cap on the maximum negative Y-axis speed.
@@ -114,6 +117,8 @@ public class PlayerControl : MonoBehaviour {
 
             // Updates the speed of the player.
             rigidbody.velocity = new Vector2(dx, dy);
+            onGround = false;
+            hasCheckedCollision = false;
 
             /*
             if (Input.GetKey(KeyCode.C))
@@ -143,7 +148,7 @@ public class PlayerControl : MonoBehaviour {
         ghostScript.toggleOn();
     }
 
-    // Switch out of the ghost stategd
+    // Switch out of the ghost state
     public void toggleOff() {
         isInControl = true;
         // Un-freeze the player.
@@ -170,11 +175,30 @@ public class PlayerControl : MonoBehaviour {
         }
     }
 
+    /*
     // When on the ground
     private void OnCollisionStay2D(Collision2D collision) {
         if (collision.transform.position.y <= transform.position.y - bot) {
             onGround = true;
         }
         dy = 0;
+    }
+    */
+    
+    private void OnCollisionStay2D(Collision2D collision) {
+        foreach (ContactPoint2D contact in collision.contacts) {
+            if (bottomOffset >= transform.position.y - contact.point.y) { // Player touches the ground if any contact point is lower or at the same height as the player's bottom.
+                onGround = true;
+                hasCheckedCollision = true;
+                return;
+            }
+        }
+		
+        if (!hasCheckedCollision) {
+            onGround = false; // Otherwise, player is in the air.
+            hasCheckedCollision = true;
+        } else {
+            // speedX = 0; // This is for better character control, try to figure out the function of this line of code by yourself!
+        }
     }
 }
