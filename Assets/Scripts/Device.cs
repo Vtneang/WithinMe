@@ -86,4 +86,10 @@ public class Device : MonoBehaviour
             }
         }
     }
+
+    public void toggle() {
+        for (int i = 0; i < m_beingActivated.Length; i++) {
+            m_beingActivated[i].SetActive(!m_beingActivated[i].active);
+        }
+    }
 }

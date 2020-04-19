@@ -11,6 +11,10 @@ public class Button : MonoBehaviour
     [SerializeField]
     [Tooltip("Device")] 
     private Device m_device;
+
+    [SerializeField]
+    [Tooltip("Shows is button only toggles the door vs open/close")]
+    private bool m_toggler;
     #endregion
 
     private bool opened, interactable;
@@ -26,6 +30,10 @@ public class Button : MonoBehaviour
     void Update() {
         if (interactable && Input.GetKeyDown(interactKey)) {
             m_Activated = !m_Activated;
+            if (m_toggler) {
+                m_device.toggle();
+                return;
+            }
             m_device.checkDevice();
         }
     }
