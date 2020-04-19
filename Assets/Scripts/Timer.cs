@@ -29,10 +29,6 @@ public class Timer : MonoBehaviour
         int count = 0;
         foreach(Button b in buttons)
         {
-            if (b.activated)
-            {
-                count += 1;
-            }
         }
         if(count == buttons.Length)
         {
@@ -72,7 +68,6 @@ public class Timer : MonoBehaviour
         }
         foreach(Button b in buttons)
         {
-            b.turn_off();
         }
         all_active = false;
         started = false;

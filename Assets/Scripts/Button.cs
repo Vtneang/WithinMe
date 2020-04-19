@@ -5,36 +5,49 @@ using UnityEngine;
 public class Button : MonoBehaviour
 {
 
-    #region button_vars
-    public bool activated;
+    #region Variables
+    private bool m_Activated;
+
     [SerializeField]
-    [Tooltip("shows whether there is a timer or not")] 
-    private bool timed;
-    private Timer clock;
-    public GameObject device;
+    [Tooltip("Device")] 
+    private Device m_device;
     #endregion
-    
-    #region button_func
-    public void interact()
-    {
-        if (timed)
-        {
-            activated = true;
-            clock.start_timer();
-        }
-        else
-        {
-            activated = !activated;
-            if (device != null) { 
-            device.active = activated;
-            }
-            /* test*/
+
+    private bool opened, interactable;
+
+    [Header("Key Setting")]
+    public KeyCode interactKey = KeyCode.F;
+
+    void Awake() {
+        m_Activated = false;
+    }
+
+    // Update is called once per frame
+    void Update() {
+        if (interactable && Input.GetKeyDown(interactKey)) {
+            m_Activated = !m_Activated;
+            m_device.checkDevice();
         }
     }
 
-    public void turn_off()
-    {
-        activated = false;
+    public bool getActivated() {
+        return m_Activated;
     }
-    #endregion
+
+    public void turnOff() {
+        m_Activated = false;
+    }
+
+    // OnTriggerEnter2D is called when the Collider2D other enters the trigger (2D physics only)
+    private void OnTriggerEnter2D(Collider2D collision) {
+        // Test if the collider object is the player controll. If yes, allow interaction.
+        if (collision.CompareTag("Player") || collision.CompareTag("Ghost")) {
+            interactable = true;
+        }
+    }
+
+    // OnTriggerExit2D is called when the Collider2D other has stopped touching the trigger (2D physics only)
+    private void OnTriggerExit2D(Collider2D collision) {
+        interactable = false;
+    }
 }

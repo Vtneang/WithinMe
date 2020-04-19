@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Vent : MonoBehaviour
 {
-    private bool disabled, interactable;
-
-    [Header("Gas Emission Setting")]
-    public GameObject gasField;
+    private bool opened, interactable;
 
     [Header("Key Setting")]
     public KeyCode interactKey = KeyCode.F;
@@ -17,20 +14,15 @@ public class Vent : MonoBehaviour
     {
         if (interactable && Input.GetKeyDown(interactKey))
         {
-            disabled = !disabled;
-
-            if (disabled)
+            if (opened)
             {
-                gasField.SetActive(false);
-
-                Debug.Log("Vent closed");
-
+                transform.Rotate(0, 0, 90);
             } else
             {
-                gasField.SetActive(true);
-
-                Debug.Log("Vent opened");
+                transform.Rotate(0, 0, -90);
             }
+
+            opened = !opened;
         }
     }
 
@@ -50,7 +42,6 @@ public class Vent : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         interactable = false;
-
-        Debug.Log("Object No Longer Interactable");
+        Debug.Log("Object Not Interactable");
     }
 }

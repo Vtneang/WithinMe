@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostControl : MonoBehaviour {
-    public bool enableEditorDebug;
     public GameObject player;
+    public GameObject m_timerbar;
+    public bool m_isLightLevel;
 
     [Header("Movement Settings")]
     [Range(0f, 20f)]
@@ -49,17 +50,16 @@ public class GhostControl : MonoBehaviour {
         rightKey = playerScript.rightKey;
         upKey = playerScript.upKey;
         downKey = playerScript.downKey;
-        if (enableEditorDebug) Debug.Log("PlayerController.Start() is called.");
         
     }
 
     // Update is called once per frame
     void Update() {
-        if (enableEditorDebug) Debug.Log("PlayerController.Update() is called.");
 
         // Get the time elapsed since last frame and decrease countdown accordingly.
         float timeElapsed = Time.deltaTime;
         timeLeft -= timeElapsed;
+        m_timerbar.transform.localScale = new Vector3(timeLeft / timeLimit, .1f);
         // Remove ghost from scene if there is no time left in countdown
         if (timeLeft <= 0) {
             toggleOff(false); 
@@ -116,7 +116,7 @@ public class GhostControl : MonoBehaviour {
     public void toggleOn() {
         // Set the ghost's position as the player's position
         transform.position = player.transform.position;
-        if (!playerScript.is_in_light)
+        if (!playerScript.is_in_light && m_isLightLevel)
         {
             timeLeft = timeLimit / 4;
         }
