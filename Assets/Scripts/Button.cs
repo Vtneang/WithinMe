@@ -15,6 +15,10 @@ public class Button : MonoBehaviour
     [SerializeField]
     [Tooltip("Shows is button only toggles the door vs open/close")]
     private bool m_toggler;
+
+    [SerializeField]
+    [Tooltip("Shows is this is a pressure plate or not")]
+    private bool m_pressure;
     #endregion
 
     private bool opened, interactable;
@@ -48,14 +52,31 @@ public class Button : MonoBehaviour
 
     // OnTriggerEnter2D is called when the Collider2D other enters the trigger (2D physics only)
     private void OnTriggerEnter2D(Collider2D collision) {
-        // Test if the collider object is the player controll. If yes, allow interaction.
-        if (collision.CompareTag("Player") || collision.CompareTag("Ghost")) {
-            interactable = true;
+        if (m_pressure) {
+            if (collision.CompareTag("Player") || collision.CompareTag("Crate")) {
+                m_Activated = true;
+                m_device.checkDevice();
+            }
         }
+        else {
+            // Test if the collider object is the player controll. If yes, allow interaction.
+            if (collision.CompareTag("Player") || collision.CompareTag("Ghost")) {
+                interactable = true;
+            }
+        }
+
     }
 
     // OnTriggerExit2D is called when the Collider2D other has stopped touching the trigger (2D physics only)
     private void OnTriggerExit2D(Collider2D collision) {
-        interactable = false;
+        if (m_pressure) {
+            if (collision.CompareTag("Player") || collision.CompareTag("Crate")) {
+                m_Activated = false;
+                m_device.checkDevice();
+            }
+        }
+        else {
+            interactable = false;
+        }
     }
 }
