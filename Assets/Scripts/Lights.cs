@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lights : MonoBehaviour
-{
-
-   
+public class Lights : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

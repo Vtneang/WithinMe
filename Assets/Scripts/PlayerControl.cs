@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour {
-    public bool enableEditorDebug;
     public GameObject ghost;
 
     [Header("Input Settings")]
@@ -25,6 +23,8 @@ public class PlayerControl : MonoBehaviour {
     public float speedY = 7;
     [Range(0f, 50f)]
     public float gravity = 7;
+    [Range(0f, 2f)]
+    public float topOffset = 0.5f;
     [Range(0f, 2f)]
     public float bottomOffset = 0.5f;
     [Range(0f, 1f)]
@@ -61,6 +61,7 @@ public class PlayerControl : MonoBehaviour {
     // Memorize the velocity of the player when switching to the ghost state.
     private Vector2 memorizeVelocity;
     private bool hasCheckedCollision;
+    private int jumpFrame;
 
     void Start() {
         ghost = GameObject.Find("Ghost");
@@ -87,10 +88,10 @@ public class PlayerControl : MonoBehaviour {
                 toggleOff();
             }
         }
-
-        if (isInControl) {
-            if (onGround) {
-                // Changes the X-axis speed on player input.
+        
+        if (onGround) {
+            // Changes the X-axis speed on player input.
+            if (isInControl) {
                 if (Input.GetKey(rightKey)) {
                     dx = speedX;
                 } else if (Input.GetKey(leftKey)) {
@@ -98,42 +99,59 @@ public class PlayerControl : MonoBehaviour {
                 } else {
                     dx = 0;
                 }
-
+                
                 // Jump.
-                if (Input.GetKey(jumpKey)) {
+                if (Input.GetKeyDown(jumpKey)) {
                     dy = speedY;
+                    jumpFrame = Time.frameCount;
+                } else {
+                    if (Time.frameCount != jumpFrame + 1) jumpFrame = -1;
+                    dy = 0;
                 }
-            } else if (!onGround) {
-                // Cap on the maximum negative Y-axis speed.
-                dy = Mathf.Max(maxFallSpeed, dy - gravity * elapsed);
-
+            } else {
+                dx = 0;
+                if (Time.frameCount != jumpFrame + 1) jumpFrame = -1;
+            }
+        } else if (!onGround) {
+            // Cap on the maximum negative Y-axis speed.
+            dy = Mathf.Max(maxFallSpeed, dy - gravity * elapsed);
+            if (isInControl) {
                 // Changes the speed by a constant factor of the speedX when not onGround.
-                if (Input.GetKey(rightKey)) {
-                    dx = Mathf.Min(speedX, dx + speedX * onAirAcceleration);
-                } else if (Input.GetKey(leftKey)) {
-                    dx = Mathf.Max(-speedX, dx - speedX * onAirAcceleration);
+                if (Input.GetKey(rightKey) && dx < 0) {
+                    dx = Mathf.Min(0, dx + speedX * onAirAcceleration);
+                } else if (Input.GetKey(leftKey) && dx > 0) {
+                    dx = Mathf.Max(0, dx - speedX * onAirAcceleration);
                 }
             }
-
-            // Updates the speed of the player.
-            rigidbody.velocity = new Vector2(dx, dy);
-            onGround = false;
-            hasCheckedCollision = false;
-
-            /*
-            if (Input.GetKey(KeyCode.C))
-            {
-                if (sprite.color == Changer)
-                {
-                    Debug.Log("Trying");
-                    StartCoroutine(ChangeColor(Cur, ChangerTime));
-                }
-                else
-                {
-                    StartCoroutine(ChangeColor(Changer, ChangerTime));
-                }
-            }*/
         }
+
+        /*
+        // Updates the speed of the player.
+        rigidbody.velocity = new Vector2(dx, dy);
+        onGround = false;
+        hasCheckedCollision = false;
+        */
+
+        /*
+        if (Input.GetKey(KeyCode.C))
+        {
+            if (sprite.color == Changer)
+            {
+                Debug.Log("Trying");
+                StartCoroutine(ChangeColor(Cur, ChangerTime));
+            }
+            else
+            {
+                StartCoroutine(ChangeColor(Changer, ChangerTime));
+            }
+        }*/
+    }
+
+    private void FixedUpdate() {
+        // Updates the speed of the player.
+        rigidbody.velocity = new Vector2(dx, dy);
+        onGround = false;
+        hasCheckedCollision = false;
     }
 
     // Switch into the ghost state
@@ -141,7 +159,7 @@ public class PlayerControl : MonoBehaviour {
         isInControl = false;
         // Memorize the current player's velocity and freeze the player.
         memorizeVelocity = rigidbody.velocity;
-        rigidbody.velocity = new Vector2(0, 0);
+        // rigidbody.velocity = new Vector2(0, 0);
         //Make the player character dark or whatever we want to do.
         //////////////////////TOOOOOOOOOODOOOOOOOOOOOOO//////////////////////////////
 
@@ -152,7 +170,7 @@ public class PlayerControl : MonoBehaviour {
     public void toggleOff() {
         isInControl = true;
         // Un-freeze the player.
-        rigidbody.velocity = memorizeVelocity;
+        // rigidbody.velocity = memorizeVelocity;
         ghostScript.toggleOff(true);
     }
 
@@ -187,18 +205,31 @@ public class PlayerControl : MonoBehaviour {
     
     private void OnCollisionStay2D(Collision2D collision) {
         foreach (ContactPoint2D contact in collision.contacts) {
-            if (bottomOffset >= transform.position.y - contact.point.y) { // Player touches the ground if any contact point is lower or at the same height as the player's bottom.
+            float yOffset = transform.position.y - contact.point.y;
+            if (bottomOffset >= yOffset && yOffset > 0.4f) { // Player touches the ground if any contact point is lower or at the same height as the player's bottom.
                 onGround = true;
                 hasCheckedCollision = true;
-                return;
+                // Debug.Log("Bottom Hits");
+            } else if (yOffset < 0 && topOffset > -yOffset && -yOffset > 0.4f) { // Player hits the ceiling.
+                if (dy > 0) dy = 0;
+                // Debug.Log("Top Hits");
+            } else {
+                if (Time.frameCount == jumpFrame + 1 && jumpFrame != -1) continue;
+                if (dy > 0) dy *= .5f;
+                /*
+                if (Time.frameCount == jumpFrame + 1 && jumpFrame != -1) continue;
+                float xOffset = transform.position.x - contact.point.x;
+                if (xOffset > 0.45 && dx < 0) dx = 0;
+                else if (xOffset < -0.45 && dx > 0) dx = 0;
+                if (dy > 0) dy = 0;
+                Debug.Log("Side Hits");
+                */
             }
         }
 		
         if (!hasCheckedCollision) {
             onGround = false; // Otherwise, player is in the air.
             hasCheckedCollision = true;
-        } else {
-            // speedX = 0; // This is for better character control, try to figure out the function of this line of code by yourself!
         }
     }
 }
