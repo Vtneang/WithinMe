@@ -55,7 +55,7 @@ public class Moveable : MonoBehaviour
 
                 // Return ghost visibility.
                 possessed = false;
-                controller.GetComponent<SpriteRenderer>().enabled = true;
+                if (controller.CompareTag("Ghost")) controller.GetComponent<SpriteRenderer>().enabled = true;
             }
         }
     }
