@@ -56,16 +56,28 @@ MonoBehaviour:
   resetKey: 114
   toggleKey: 101
   speedX: 3
-  speedY: 7
-  gravity: 7
+  speedY: 6
+  gravity: 10
+  speed: 40
+  jumpForce: 60
+  bottomOffset: 0
+  bottomRadius: 0.5
+  moveInAir: 1
+  currentVelocity: {x: 0, y: 0, z: 0}
+  smoothTime: 0.05
   onAirAcceleration: 0.1
   maxFallSpeed: -100
   bot: 0.5
-  renderer: {fileID: 2148351181807584786}
+  is_in_light: 1
+  renderer: {fileID: 0}
   rigidbody: {fileID: 2148351181807584788}
   Changer: {r: 0, g: 0, b: 0, a: 0}
   Cur: {r: 0, g: 0, b: 0, a: 0}
   ChangerTime: 0
+  jumped: 1
+  facingRight: 1
+  onGround: 0
+  ghostScript: {fileID: 0}
 --- !u!212 &2148351181807584786
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -80,6 +92,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -91,6 +104,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -129,7 +143,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.48
 --- !u!50 &2148351181807584788
 Rigidbody2D:
   serializedVersion: 4
@@ -144,10 +158,10 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_AngularDrag: 0
+  m_GravityScale: 3
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4

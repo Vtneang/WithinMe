@@ -587,6 +587,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2148351181517756278}
   m_PrefabAsset: {fileID: 0}
+--- !u!50 &777978956 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 2148351181807584788, guid: e03be1a17856a4b25a72c69bb6a325c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2148351181517756278}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &777978959 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
@@ -756,6 +762,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ghost
+      objectReference: {fileID: 0}
+    - target: {fileID: 329453942434118224, guid: 442a447ed2f4ad2429d8a8782b9b0ae7,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 329453942434118227, guid: 442a447ed2f4ad2429d8a8782b9b0ae7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4762895197127929578, guid: 442a447ed2f4ad2429d8a8782b9b0ae7,
         type: 3}
@@ -1126,17 +1142,47 @@ PrefabInstance:
     - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
       propertyPath: is_in_light
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: jumpForce
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: moveInAir
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: smoothTime
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: jumped
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: bottomOffset
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1009041824822613766, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: rigidbody
+      value: 
+      objectReference: {fileID: 777978956}
     - target: {fileID: 2148351181807584787, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.59
       objectReference: {fileID: 0}
     - target: {fileID: 2148351181807584787, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: -2.81
       objectReference: {fileID: 0}
     - target: {fileID: 2148351181807584787, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
@@ -1188,10 +1234,25 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2148351181807584788, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148351181807584788, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148351181807584788, guid: e03be1a17856a4b25a72c69bb6a325c0,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2148351181807584789, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
       propertyPath: m_Radius
-      value: 0.499
+      value: 0.48
       objectReference: {fileID: 0}
     - target: {fileID: 2148351181807584790, guid: e03be1a17856a4b25a72c69bb6a325c0,
         type: 3}
