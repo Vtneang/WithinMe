@@ -48,6 +48,7 @@ public class PlayerControl : MonoBehaviour {
 
     [Header("Graphics Settings")]
     public SpriteRenderer renderer;
+    public AnimationController animationController;
 
     [Header("Physics Settings")]
     public Rigidbody2D rigidbody;
@@ -177,6 +178,10 @@ public class PlayerControl : MonoBehaviour {
             Move(speedX * Time.fixedDeltaTime, jumped);
             jumped = false;
         }
+        
+        if (Math.Abs(rigidbody.velocity.y) > 0.0001f) animationController.SetState(AnimationState.InAir);
+        else if (Math.Abs(rigidbody.velocity.x) > 0.0001f) animationController.SetState(AnimationState.Run);
+        else animationController.SetState(AnimationState.Idle);
     }
 
     private void OnGroundEnter() {
